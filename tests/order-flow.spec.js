@@ -7,13 +7,10 @@ test.describe('Order placement', () => {
     await authPage.signInIfAvailable(orderData.credentials.email, orderData.credentials.password);
     await shopPage.open();
 
-    for (const item of orderData.items) {
-      await shopPage.addProductQuantity(item.name, item.quantity);
-    }
+    await shopPage.addProducts(orderData.items);
 
     await shopPage.openCart();
     await cartPage.proceedToCheckout();
-
     await checkoutPage.placeOrder(orderData.country);
     await expect(checkoutPage.successMessage()).toContainText(/thank you|successfully/i);
     await expect(page).toHaveURL(/.*seleniumPractise.*/);

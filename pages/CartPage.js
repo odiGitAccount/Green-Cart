@@ -36,6 +36,22 @@ class CartPage {
   async expectInvalidPromoError() {
     await expect(this.promoErrorMessage).toHaveText(/invalid code/i);
   }
+
+  async expectEmptyPromoError() {
+    await expect(this.promoErrorMessage).toHaveText(/empty code/i);
+  }
+
+  async expectValidPromoApplied() {
+    await expect(this.promoErrorMessage).toHaveText(/code applied/i);
+    const totalPrice = Number(await this.page.locator('.totAmt').innerText());
+    const discountPercentageText = await this.page.locator('.discountPerc').innerText();
+    const discountedTotal = Number(await this.page.locator('.discountAmt').innerText());
+
+    const discountPercentage = Number(discountPercentageText.replace(/[^\d.]/g, ''));
+    const expectedTotal = totalPrice - totalPrice * (discountPercentage / 100);
+
+    expect(discountedTotal).toBeCloseTo(expectedTotal, 1);
+  }
 }
 
 module.exports = { CartPage };

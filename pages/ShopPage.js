@@ -32,6 +32,12 @@ class ShopPage {
     await addToCartButton.click();
   }
 
+  async addProducts(products) {
+    for (const product of products) {
+      await this.addProductQuantity(product.name, product.quantity);
+    }
+  }
+
   async openCart() {
     await this.cartIcon.click();
   }
